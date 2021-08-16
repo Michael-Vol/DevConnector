@@ -82,4 +82,41 @@ router.get('/:post_id', auth, async (req, res) => {
 		res.status(500).send('Server Error');
 	}
 });
+
+/**
+ * @name DELETE api/posts/{post_id}
+ * @desc Delete post by ID
+ * @access private
+ */
+
+router.delete('/:post_id', auth, async (req, res) => {
+	try {
+		const post = await Post.findById(req.params.post_id);
+
+		if (!post) {
+			return res.status(404).json({
+				message: 'Post not found.',
+			});
+		}
+
+		//Check if user has created the post
+		if (post.user.toString() !== req.user.id) {
+			return res.status(401).json({
+				message: 'User not authorized.',
+			});
+		}
+		await post.remove();
+		res.json({
+			message: 'Post removed',
+		});
+	} catch (error) {
+		console.error(error.name);
+		if (error.name === 'CastError') {
+			return res.status(404).json({
+				message: 'Post not found.',
+			});
+		}
+		res.status(500).send('Server Error');
+	}
+});
 module.exports = router;
