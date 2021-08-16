@@ -35,4 +35,51 @@ router.post('/', [auth, [check('text', 'Text is required').not().isEmpty()]], as
 	}
 });
 
+/**
+ * @name GET api/posts
+ * @desc Get all posts
+ * @access private
+ */
+
+router.get('/', auth, async (req, res) => {
+	try {
+		const posts = await Post.find().sort({
+			date: '-1',
+		});
+
+		res.json(posts);
+	} catch (error) {
+		console.error(error.name);
+		res.status(500).send('Server Error');
+	}
+});
+
+/**
+ * @name GET api/posts/{post_id}
+ * @desc Get post by ID
+ * @access private
+ */
+
+router.get('/:post_id', auth, async (req, res) => {
+	try {
+		const post = await Post.findById(req.params.post_id).sort({
+			date: '-1',
+		});
+		if (!post) {
+			return res.status(404).json({
+				message: 'Post not found.',
+			});
+		}
+
+		res.json(post);
+	} catch (error) {
+		console.error(error.name);
+		if (error.name === 'CastError') {
+			return res.status(404).json({
+				message: 'Post not found.',
+			});
+		}
+		res.status(500).send('Server Error');
+	}
+});
 module.exports = router;
