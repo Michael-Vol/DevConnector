@@ -11,7 +11,7 @@ const Alert = ({ alerts }) =>
 		</div>
 	));
 
-Alert.propTypes = {};
+//Alert.propTypes = {};
 
 const mapStateToProps = (state) => ({
 	alerts: state.alert,
