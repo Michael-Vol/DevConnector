@@ -12,7 +12,7 @@ function profile(state = initialState, action) {
 
 	switch (type) {
 		case GET_PROFILE:
-			return { ...state, profile: payload, loading: false };
+			return { ...state, profile: payload.profile, loading: false };
 		case PROFILE_ERROR:
 			return { ...state, error: payload, loading: false };
 		case CLEAR_PROFILE:

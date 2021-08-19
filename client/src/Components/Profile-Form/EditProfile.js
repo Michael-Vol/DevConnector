@@ -1,10 +1,11 @@
-import React, { useState, Fragment } from 'react';
-import createProfile from '../../Actions/profile';
-import { Link, withRouter } from 'react-router-dom';
+import React, { useState, Fragment, useEffect } from 'react';
+import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { createProfile, getCurrentProfile } from '../../Actions/profile';
+import { Link } from 'react-router-dom';
 
-const CreateProfile = ({ createProfile, history }) => {
+const EditProfile = ({ profile: { profile, loading }, createProfile, getCurrentProfile, history }) => {
 	const [formData, setFormData] = useState({
 		company: '',
 		website: '',
@@ -20,6 +21,25 @@ const CreateProfile = ({ createProfile, history }) => {
 		instagram: '',
 	});
 	const [displaySocialInputs, toggleSocialInputs] = useState(false);
+	useEffect(() => {
+		getCurrentProfile();
+		setFormData({
+			company: loading || !profile.company ? '' : profile.company,
+			website: loading || !profile.website ? '' : profile.website,
+			location: loading || !profile.location ? '' : profile.location,
+			bio: loading || !profile.bio ? '' : profile.bio,
+			status: loading || !profile.status ? '' : profile.status,
+			githubusername: loading || !profile.githubusername ? '' : profile.githubusername,
+			skills: Array.isArray(skills) ? skills : skills.split(',').map((skill) => ' ' + skill.trim()),
+			twitter: loading || !profile.social ? '' : profile.social.twitter,
+			youtube: loading || !profile.social ? '' : profile.social.youtube,
+			linkedin: loading || !profile.social ? '' : profile.social.linkedin,
+			instagram: loading || !profile.social ? '' : profile.social.instagram,
+			facebook: loading || !profile.social ? '' : profile.social.facebook,
+		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [loading, getCurrentProfile]);
+
 	const { company, website, location, status, skills, githubusername, bio, twitter, facebook, linkedin, youtube, instagram } =
 		formData;
 	const onChange = (e) => {
@@ -27,7 +47,7 @@ const CreateProfile = ({ createProfile, history }) => {
 	};
 	const onSubmit = (e) => {
 		e.preventDefault();
-		createProfile(formData, history);
+		createProfile(formData, history, true);
 	};
 	return (
 		<Fragment>
@@ -146,16 +166,20 @@ const CreateProfile = ({ createProfile, history }) => {
 					</Fragment>
 				)}
 				<input type='submit' className='btn btn-primary my-1' />
-				<a className='btn btn-light my-1' href='dashboard.html'>
+				<Link className='btn btn-light my-1' to='/dashboard'>
 					Go Back
-				</a>
+				</Link>
 			</form>
 		</Fragment>
 	);
 };
 
-CreateProfile.propTypes = {
+createProfile.propTypes = {
 	createProfile: PropTypes.func.isRequired,
+	profile: PropTypes.object.isRequired,
+	getCurrentProfile: PropTypes.func.isRequired,
 };
 
-export default connect(null, { createProfile })(withRouter(CreateProfile));
+const mapStateToProps = (state) => ({ profile: state.profile });
+
+export default connect(mapStateToProps, { createProfile, getCurrentProfile })(withRouter(EditProfile));
