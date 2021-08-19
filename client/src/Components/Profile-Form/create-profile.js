@@ -1,8 +1,10 @@
 import React, { useState, Fragment } from 'react';
+import createProfile from '../../Actions/profile';
+import { Link, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-const CreateProfile = (props) => {
+const CreateProfile = ({ createProfile, history }) => {
 	const [formData, setFormData] = useState({
 		company: '',
 		website: '',
@@ -23,6 +25,10 @@ const CreateProfile = (props) => {
 	const onChange = (e) => {
 		setFormData({ ...formData, [e.target.name]: e.target.value });
 	};
+	const onSubmit = (e) => {
+		e.preventDefault();
+		createProfile(formData, history);
+	};
 	return (
 		<Fragment>
 			<h1 className='large text-primary'>Create Your Profile</h1>
@@ -30,7 +36,7 @@ const CreateProfile = (props) => {
 				<i className='fas fa-user'></i> Let's get some information to make your profile stand out
 			</p>
 			<small>* = required field</small>
-			<form className='form'>
+			<form className='form' onSubmit={(e) => onSubmit(e)}>
 				<div className='form-group'>
 					<select name='status' value={status} onChange={(e) => onChange(e)}>
 						<option value='0'>* Select Professional Status</option>
@@ -137,17 +143,19 @@ const CreateProfile = (props) => {
 								onChange={(e) => onChange(e)}
 							/>
 						</div>
-						<input type='submit' className='btn btn-primary my-1' />
-						<a className='btn btn-light my-1' href='dashboard.html'>
-							Go Back
-						</a>
 					</Fragment>
 				)}
+				<input type='submit' className='btn btn-primary my-1' />
+				<a className='btn btn-light my-1' href='dashboard.html'>
+					Go Back
+				</a>
 			</form>
 		</Fragment>
 	);
 };
 
-CreateProfile.propTypes = {};
+CreateProfile.propTypes = {
+	createProfile: PropTypes.func.isRequired,
+};
 
-export default CreateProfile;
+export default connect(null, { createProfile })(withRouter(CreateProfile));
