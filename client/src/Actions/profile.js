@@ -1,4 +1,4 @@
-import { GET_PROFILE, PROFILE_ERROR, UPDATE_PROFILE, ACCOUNT_DELETED, CLEAR_PROFILE } from './types';
+import { GET_PROFILE, PROFILE_ERROR, UPDATE_PROFILE, ACCOUNT_DELETED, CLEAR_PROFILE, GET_PROFILES, GET_REPOS } from './types';
 import setAlert from './alert';
 import axios from 'axios';
 //Get current users profile
@@ -155,7 +155,7 @@ export const deleteEducation = (id) => async (dispatch) => {
 		});
 	}
 };
-//Delete Experiene
+//Delete Account
 export const deleteAccount = () => async (dispatch) => {
 	if (window.confirm('Are you sure? This can not be undone!')) {
 		try {
@@ -179,4 +179,68 @@ export const deleteAccount = () => async (dispatch) => {
 	}
 };
 
-//Delete Account
+//Get all profiles
+
+export const getAllProfiles = () => async (dispatch) => {
+	dispatch({ type: CLEAR_PROFILE });
+	try {
+		const res = await axios.get('/api/profile');
+
+		dispatch({
+			type: GET_PROFILES,
+			payload: res.data,
+		});
+	} catch (error) {
+		console.log(error);
+		dispatch({
+			type: PROFILE_ERROR,
+			payload: {
+				msg: error.response.statusText,
+				status: error.response.status,
+			},
+		});
+	}
+};
+
+//Get  profile by ID
+
+export const getProfileByID = (userId) => async (dispatch) => {
+	try {
+		const res = await axios.get(`/api/profile/${userId}`);
+
+		dispatch({
+			type: GET_PROFILE,
+			payload: res.data,
+		});
+	} catch (error) {
+		console.log(error);
+		dispatch({
+			type: PROFILE_ERROR,
+			payload: {
+				msg: error.response.statusText,
+				status: error.response.status,
+			},
+		});
+	}
+};
+//Get  Github Repos
+
+export const getGithubRepos = (username) => async (dispatch) => {
+	try {
+		const res = await axios.get(`/api/github/${username}`);
+
+		dispatch({
+			type: GET_REPOS,
+			payload: res.data,
+		});
+	} catch (error) {
+		console.log(error);
+		dispatch({
+			type: PROFILE_ERROR,
+			payload: {
+				msg: error.response.statusText,
+				status: error.response.status,
+			},
+		});
+	}
+};
