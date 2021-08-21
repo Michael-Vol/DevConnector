@@ -6,7 +6,6 @@ import axios from 'axios';
 export const getCurrentProfile = () => async (dispatch) => {
 	try {
 		const res = await axios.get('/api/profile/me');
-
 		dispatch({
 			type: GET_PROFILE,
 			payload: res.data,
@@ -97,7 +96,7 @@ export const addEducation = (formData, history) => async (dispatch) => {
 			},
 		};
 		const res = await axios.put('/api/profile/education', formData, config);
-
+		console.log(res.data);
 		dispatch({
 			type: UPDATE_PROFILE,
 			payload: res.data,
@@ -207,6 +206,7 @@ export const getAllProfiles = () => async (dispatch) => {
 export const getProfileByID = (userId) => async (dispatch) => {
 	try {
 		const res = await axios.get(`/api/profile/user/${userId}`);
+		console.log(res.data);
 		dispatch({
 			type: GET_PROFILE,
 			payload: res.data,
