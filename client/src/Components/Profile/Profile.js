@@ -6,6 +6,7 @@ import ProfileTop from './ProfileTop';
 import ProfileAbout from './ProfileAbout';
 import ProfileExperience from './ProfileExperience';
 import ProfileEducation from './ProfileEducation';
+import ProfileGithub from './ProfileGithub';
 import Spinner from '../Layout/Spinner';
 import { getProfileByID } from '../../Actions/profile';
 
@@ -52,6 +53,7 @@ const Profile = ({ getProfileByID, profile: { profile }, auth, match }) => {
 									<h4>No Education Credentials</h4>
 								)}
 							</div>
+							{profile.githubusername && <ProfileGithub username={profile.githubusername} />}
 						</div>
 					</Fragment>
 				)}
