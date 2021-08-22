@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 const Profiles = ({ getAllProfiles, profile: { profiles, loading } }) => {
 	useEffect(() => {
 		getAllProfiles();
-	}, []);
+	}, [getAllProfiles]);
 	return (
 		<Fragment>
 			{loading ? (
